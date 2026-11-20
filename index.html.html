@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#092747">
+<title>FastConnect Internet | Wi-Fi Hotspot</title>
+<style>
+:root{--navy:#092747;--blue:#087fbd;--cyan:#48d5e8;--ink:#14283d;--muted:#64748b;--bg:#f2f7fb;--white:#fff}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:linear-gradient(135deg,#092747,#075b89);color:white;padding:26px 18px 42px;text-align:center}
+.logo{width:62px;height:62px;margin:0 auto 12px;border:2px solid #48d5e8;border-radius:18px;display:grid;place-items:center;font-size:30px}
+h1{margin:0;font-size:clamp(28px,6vw,42px);letter-spacing:.3px}.tag{margin:9px 0 0;color:#c9f4ff}
+main{max-width:900px;margin:-22px auto 40px;padding:0 16px}
+.panel{background:white;border-radius:18px;padding:22px;box-shadow:0 10px 30px #09274712;margin-bottom:18px}
+.intro{text-align:center}.intro h2{margin:0 0 8px}.intro p{color:var(--muted);margin:0;line-height:1.5}
+.packages{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-top:18px}
+.package{border:1px solid #dbe7f0;border-radius:15px;padding:18px;text-align:center;cursor:pointer;transition:.15s;background:#fff}
+.package:hover,.package.selected{border:2px solid var(--blue);background:#f0faff;transform:translateY(-2px)}
+.package h3{margin:0 0 8px}.price{font-size:30px;font-weight:800;color:var(--navy)}.duration{color:var(--muted);font-size:14px;margin-top:5px}
+form{display:grid;gap:12px;max-width:520px;margin:16px auto 0}
+label{font-weight:700;font-size:14px}input{width:100%;padding:13px 14px;border:1px solid #cbd8e3;border-radius:10px;font-size:16px;margin-top:7px}
+button{border:0;border-radius:11px;background:var(--blue);color:white;padding:14px 18px;font-size:16px;font-weight:700;cursor:pointer}
+button:disabled{opacity:.45;cursor:not-allowed}.notice{background:#fff8e8;border:1px solid #f2d69a;color:#76520a;padding:13px;border-radius:11px;font-size:14px;line-height:1.5}
+#message{display:none;background:#eef8ff;border:1px solid #b9e2f5;color:#164c6b;padding:13px;border-radius:11px;line-height:1.5}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}.step{background:#f4f9fc;border-radius:12px;padding:14px;font-size:14px;line-height:1.45}.step b{display:block;color:var(--blue);margin-bottom:5px}
+footer{text-align:center;color:var(--muted);font-size:13px;padding:8px 16px 28px}
+.small{font-size:12px;color:var(--muted);line-height:1.5}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo" aria-hidden="true">⌁</div>
+  <h1>FastConnect Internet</h1>
+  <p class="tag">FAST • RELIABLE • AFFORDABLE</p>
+</header>
+<main>
+  <section class="panel intro">
+    <h2>Welcome to FastConnect Wi-Fi</h2>
+    <p>Choose an internet package below. Once the hotspot and M-Pesa payment service are connected, you will be able to pay and get online here.</p>
+  </section>
+  <section class="panel">
+    <h2 style="text-align:center;margin:0">Choose your package</h2>
+    <div class="packages" id="packages">
+      <div class="package" role="button" tabindex="0" data-name="1 Hour" data-price="10"><h3>1 Hour</h3><div class="price">KSh 10</div><div class="duration">Short browsing</div></div>
+      <div class="package" role="button" tabindex="0" data-name="3 Hours" data-price="20"><h3>3 Hours</h3><div class="price">KSh 20</div><div class="duration">Stay connected longer</div></div>
+      <div class="package" role="button" tabindex="0" data-name="24 Hours" data-price="50"><h3>24 Hours</h3><div class="price">KSh 50</div><div class="duration">Daily access</div></div>
+    </div>
+    <form id="checkout">
+      <div><label for="phone">M-Pesa phone number</label><input id="phone" type="tel" inputmode="tel" placeholder="e.g. 07XXXXXXXX" autocomplete="tel" required pattern="(\+254|0)?[17][0-9]{8}"></div>
+      <button id="pay" type="submit" disabled>Select a package to continue</button>
+      <div id="message" role="status"></div>
+      <div class="notice"><b>Demo notice:</b> This is a website preview. Live M-Pesa payments and automatic Wi-Fi activation have not been connected. Do not enter your M-Pesa PIN on this page.</div>
+    </form>
+  </section>
+  <section class="panel">
+    <h2 style="text-align:center;margin-top:0">How it will work</h2>
+    <div class="steps">
+      <div class="step"><b>1. Connect</b>Join the FastConnect Wi-Fi network.</div>
+      <div class="step"><b>2. Select</b>Choose the package that suits you.</div>
+      <div class="step"><b>3. Pay</b>Approve a secure M-Pesa payment prompt when live payments are enabled.</div>
+      <div class="step"><b>4. Browse</b>Your internet session starts after payment is verified.</div>
+    </div>
+  </section>
+  <section class="panel">
+    <h3 style="margin-top:0">Need help?</h3>
+    <p class="small">Business: FastConnect Internet<br>Support contact: To be added by the business owner.</p>
+  </section>
+</main>
+<footer>© <span id="year"></span> FastConnect Internet. All rights reserved.</footer>
+<script>
+let chosen=null;
+const cards=[...document.querySelectorAll('.package')], pay=document.getElementById('pay'), msg=document.getElementById('message');
+function choose(card){cards.forEach(c=>c.classList.remove('selected'));card.classList.add('selected');chosen={name:card.dataset.name,price:card.dataset.price};pay.disabled=false;pay.textContent=`Continue — KSh ${chosen.price}`;}
+cards.forEach(c=>{c.addEventListener('click',()=>choose(c));c.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();choose(c)}})});
+document.getElementById('checkout').addEventListener('submit',e=>{e.preventDefault();if(!chosen)return;const phone=document.getElementById('phone').value.trim();msg.style.display='block';msg.textContent=`Preview only: You selected ${chosen.name} for KSh ${chosen.price}. The live M-Pesa checkout is not connected yet. Your number has not been charged and no Wi-Fi access has been issued.`;});
+document.getElementById('year').textContent=new Date().getFullYear();
+</script>
+</body>
+</html>
